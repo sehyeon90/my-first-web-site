@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오목</title>
+    <style>
+        table{
+            border-collapse: collapse;
+            // 표테두리와 셀테두리를 합치것에 대한 설정
+        }
+        td{
+            border: 1px solid black;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        //문서 객체 생성하기 
+        const $table = document.createElement('table');
+        const { body } = document;
+        let thisTurn = 'O';
+        let nowPlayer = document.createElement('div');
+        let forbidden = document.createElement('div');
+        // nowPlayer.textContent = `현재 플레이어 : ${thisTurn}`;
+        let winner;
+        for(let i=1; i<=8; i++){
+            const $tr = document.createElement('tr') //tr태그 행
+            const line = [];
+            for(let k=1; k<=8; k++){
+                const $td = document.createElement('td')
+                $td.id = `${i}${k}`;
+                $tr.appendChild($td)
+                line.push($tr)
+            }
+            $table.appendChild($tr);
+        }
+        body.appendChild($table);
+        body.appendChild(nowPlayer);
+        $table.addEventListener('click',boxClick)
+
+        function boxClick(){
+            //console.log(event.target.id)
+           
+
+            if(event.target.textContent){
+                body.appendChild(forbidden)
+                forbidden.textContent = "그 자리에 놓을 수 없습니다."
+            } else {
+                forbidden.textContent = "";
+                event.target.textContent = thisTurn;
+                
+                let ri = Number(event.target.id) + 1;
+                let le = Number(event.target.id) - 1;
+                let tp = Number(event.target.id) - 10;
+                let bn = Number(event.target.id) + 10;
+                let tple = Number(event.target.id) - 11;
+                let tpri = Number(event.target.id) - 9;
+                let bnle = Number(event.target.id) + 9;
+                let bnri = Number(event.target.id) + 11;
+                let direction = [ri, le, tp, bn, tple, tpri, bnle, bnri,
+            1, -1, -10, 10, -11, -9, 9, 11
+                ];
+                let winArr = [];
+                for(let i=0; i<8; i++){
+                    thisNum = Number(event.target.id)
+                    if(
+                        document.getElementById(direction[i]).textContent === thisTurn
+                    ){
+                        //console.log(i);
+                        winArr.push(direction[i])
+                        thisNum = direction[i]
+                        for(let p=0; p<8; p++){
+                            thisNum -=direction[8+i]
+                          if(document.getElementById(thisNum).textContent === thisTurn)  
+                            winArr.push(thisNum);
+                        }
+                    }
+                }
+                thisTurn = thisTurn === "O" ? "X" : "O";
+                    nowPlayer.textContent = `현재 플레이어 : ${thisTurn}`;
+                    
+                }  
+            }
+        
+        
+    </script>
+</body>
+</html>
